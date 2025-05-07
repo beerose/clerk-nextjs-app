@@ -18,11 +18,15 @@ function createClerkSupabaseClient(session: any) {
 }
 
 export default function Home() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, orgId, orgRole, orgSlug } = useAuth();
   const { user } = useUser();
   const { session } = useSession();
   const [name, setName] = useState('')
   const [tasks, setTasks] = useState<any[]>([])
+
+  console.log('orgId', orgId)
+  console.log('orgRole', orgRole)
+  console.log('orgSlug', orgSlug)
 
   const client = createClerkSupabaseClient(session)
 
