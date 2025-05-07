@@ -76,23 +76,25 @@ export default function Home() {
           )}
         </div>
 
-        <form onSubmit={createTask} className="flex gap-4 w-full mt-4">
-          <input
-            autoFocus
-            type="text"
-            name="name"
-            placeholder="Enter new task"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white font-medium rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Add
-          </button>
-        </form>
+        {isSignedIn && (
+          <form onSubmit={createTask} className="flex gap-4 w-full mt-4">
+            <input
+              autoFocus
+              type="text"
+              name="name"
+              placeholder="Enter new task"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              className="flex-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Add
+            </button>
+          </form>
+        )}
       </main>
     </div>
   );
