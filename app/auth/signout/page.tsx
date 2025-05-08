@@ -1,4 +1,4 @@
-import { SignOutButton } from '@clerk/clerk-react'
+import { SignOutButton } from '@clerk/nextjs'
 
 const SignOutPage = () => <SignOutButton />
 
