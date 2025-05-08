@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider >
+    <ClerkProvider signInUrl='/custom/sign-in' signUpUrl='/custom/sign-up'>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
