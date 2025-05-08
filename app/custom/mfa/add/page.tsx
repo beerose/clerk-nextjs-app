@@ -5,9 +5,9 @@ import { ClerkAPIError, TOTPResource } from '@clerk/types'
 import Link from 'next/link'
 import * as React from 'react'
 import { QRCodeSVG } from 'qrcode.react'
-import { GenerateBackupCodes } from '../page'
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors'
 import { ClerkApiErrors } from '@/src/components/ClerkApiErrors'
+import { BackupCodes } from '@/src/components/BackupCodes'
 
 type AddTotpSteps = 'add' | 'verify' | 'backupcodes' | 'success'
 
@@ -159,7 +159,7 @@ function BackupCodeScreen({
           Save this list of backup codes somewhere safe in case you need to access your account in
           an emergency
         </p>
-        <GenerateBackupCodes errors={errors} setErrors={setErrors} />
+        <BackupCodes errors={errors} setErrors={setErrors} />
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
           onClick={() => setStep('success')}
