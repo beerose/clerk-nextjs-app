@@ -28,7 +28,6 @@ export default function Tasks({ session, user }: { session: any; user: any }) {
       const { data, error } = await client.from('tasks').select(
         '*',
       );
-      console.log('Tasks:', data);
       if (!error) setTasks(data);
     }
 
