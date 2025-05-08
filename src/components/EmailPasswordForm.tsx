@@ -5,15 +5,15 @@ import { useState } from "react"
 export const EmailPasswordForm = ({
   onSubmit,
 }: {
-  onSubmit: (email: string, password: string) => Promise<null | undefined>
+  onSubmit: (email: string, password: string) => void
 }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   return (
-    <form onSubmit={async (e) => {
+    <form onSubmit={(e) => {
       e.preventDefault()
-      await onSubmit(email, password)
+      onSubmit(email, password)
     }} className="flex flex-col gap-4 w-full">
       <label htmlFor="email" className="text-sm font-medium text-gray-700">
         Enter email

@@ -9,30 +9,40 @@ import { isClerkAPIResponseError } from '@clerk/nextjs/errors'
 import { ClerkApiErrors } from '@/src/components/ClerkApiErrors'
 import { EmailPasswordForm } from '@/src/components/EmailPasswordForm'
 import Link from 'next/link'
+import { MFAVerificationForm } from '@/src/components/MFAVerificationForm'
 
 export default function Page() {
   const { isLoaded, signIn, setActive } = useSignIn()
-  const [verifying, setVerifying] = React.useState(false)
+  const [displayTOTP, setDisplayTOTP] = React.useState(false)
   const [errors, setErrors] = React.useState<ClerkAPIError[]>()
+  const [credentials, setCredentials] = React.useState({
+    email: '',
+    password: '',
+  })
 
   const router = useRouter()
 
-  async function handleSubmit(email: string, password: string) {
+  async function handleSubmit(code: string, isBackupCode: boolean) {
     setErrors(undefined)
 
     if (!isLoaded && !signIn) return null
 
     try {
-      const signInAttempt = await signIn.create({
-        identifier: email,
-        password
+      await signIn.create({
+        identifier: credentials.email,
+        password: credentials.password,
       })
 
+      const signInAttempt = await signIn.attemptSecondFactor({
+        strategy: isBackupCode ? 'backup_code' : 'totp',
+        code: code,
+      })
+
+      await setActive({ session: signInAttempt.createdSessionId })
       if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId })
         router.push('/')
       } else {
-        console.error(JSON.stringify(signInAttempt, null, 2))
+        console.error('Invalid sign in attempt', signInAttempt)
       }
     } catch (err) {
       if (isClerkAPIResponseError(err)) {
@@ -44,6 +54,7 @@ export default function Page() {
   }
 
   const signInWith = (strategy: OAuthStrategy) => {
+    setErrors(undefined)
     if (!signIn) return null
 
     return signIn
@@ -59,10 +70,27 @@ export default function Page() {
       })
   }
 
+  if (displayTOTP) {
+    return (
+      <>
+        <MFAVerificationForm
+          onVerify={async (code: string, isBackupCode: boolean) => {
+            await handleSubmit(code, isBackupCode)
+          }}
+        />
+        {errors && <ClerkApiErrors errors={errors} />}
+      </>
+    )
+  }
+
   return (
     <>
       <h1 className="text-2xl font-bold text-center sm:text-left">Sign in</h1>
-      <EmailPasswordForm onSubmit={handleSubmit} />
+      <EmailPasswordForm onSubmit={(email, password) => {
+        setErrors(undefined)
+        setCredentials({ email, password })
+        setDisplayTOTP(true)
+      }} />
       <Link href={'/custom/reset-password'} className="text-sm text-blue-600 hover:underline">
         Forgot your password?
       </Link>
