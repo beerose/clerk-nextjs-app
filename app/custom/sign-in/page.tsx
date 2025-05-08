@@ -6,32 +6,18 @@ import { EmailCodeFactor, OAuthStrategy, SignInFirstFactor } from '@clerk/types'
 import { useRouter } from 'next/navigation'
 import { ClerkAPIError } from '@clerk/types'
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors'
-
-const Errors = ({ errors }: { errors: ClerkAPIError[] }) => {
-  if (!errors) return null
-
-  return (
-    <div className="flex flex-col gap-2">
-      {errors.map((error) => (
-        <div key={error.code} className="text-red-600">
-          {error.longMessage}
-        </div>
-      ))}
-    </div>
-  )
-}
+import { ClerkApiErrors } from '@/src/components/ClerkApiErrors'
+import { CodeVerificationForm } from '@/src/components/CodeVerificationForm'
+import { EmailForm } from '@/src/components/EmailForm'
 
 export default function Page() {
   const { isLoaded, signIn, setActive } = useSignIn()
   const [verifying, setVerifying] = React.useState(false)
-  const [email, setEmail] = React.useState('')
-  const [code, setCode] = React.useState('')
   const [errors, setErrors] = React.useState<ClerkAPIError[]>()
 
   const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSubmit(email: string) {
     setErrors(undefined)
 
     if (!isLoaded && !signIn) return null
@@ -62,9 +48,7 @@ export default function Page() {
     }
   }
 
-  async function handleVerification(e: React.FormEvent) {
-    e.preventDefault()
-
+  async function handleVerification(code: string) {
     if (!isLoaded && !signIn) return null
 
     try {
@@ -95,9 +79,7 @@ export default function Page() {
         redirectUrl: '/custom/sign-up/sso-callback',
         redirectUrlComplete: '/',
       })
-      .then((res) => {
-        console.log(res)
-      })
+      .then((_res) => { })
       .catch((err: any) => {
         if (isClerkAPIResponseError(err)) setErrors(err.errors)
         console.error(JSON.stringify(err, null, 2))
@@ -106,75 +88,32 @@ export default function Page() {
 
   if (verifying) {
     return (
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-gray-50 text-gray-800">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full max-w-2xl">
-          <h1 className="text-2xl font-bold text-center sm:text-left">Verify your email</h1>
-          <form onSubmit={handleVerification} className="flex flex-col gap-4 w-full">
-            <label htmlFor="code" className="text-sm font-medium text-gray-700">
-              Enter your verification code
-            </label>
-            <input
-              value={code}
-              id="code"
-              name="code"
-              type="text"
-              onChange={(e) => setCode(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter code"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Verify
-            </button>
-          </form>
-          {errors && <Errors errors={errors} />}
-        </main>
-      </div>
+      <>
+        <CodeVerificationForm onVerify={handleVerification} />
+        {errors && <ClerkApiErrors errors={errors} />}
+      </>
     )
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-gray-50 text-gray-800">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full max-w-2xl">
-        <h1 className="text-2xl font-bold text-center sm:text-left">Sign in</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-          <label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Enter email
-          </label>
-          <input
-            value={email}
-            id="email"
-            name="email"
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="you@example.com"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Continue
-          </button>
-        </form>
-        <div className="flex items-center justify-between w-full my-4">
-          <hr className="w-full border-gray-300" />
-          <span className="px-2 text-gray-500">or</span>
-          <hr className="w-full border-gray-300" />
-        </div>
-        <div className="flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={() => signInWith('oauth_google')}
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Sign in with Google
-          </button>
-        </div>
-        {errors && <Errors errors={errors} />}
-      </main>
-    </div>
+    <>
+      <h1 className="text-2xl font-bold text-center sm:text-left">Sign in</h1>
+      <EmailForm onSubmit={handleSubmit} />
+      <div className="flex items-center justify-between w-full my-4">
+        <hr className="w-full border-gray-300" />
+        <span className="px-2 text-gray-500">or</span>
+        <hr className="w-full border-gray-300" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <button
+          type="button"
+          onClick={() => signInWith('oauth_google')}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Sign in with Google
+        </button>
+      </div>
+      {errors && <ClerkApiErrors errors={errors} />}
+    </>
   )
 }
