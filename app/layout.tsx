@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { ClerkProvider, GoogleOneTap, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, OrganizationSwitcher } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { ptBR } from '@clerk/localizations'
+import { neobrutalism } from '@clerk/themes'
 import './globals.css'
 
 const geistSans = Geist({
@@ -24,7 +26,51 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider signInUrl='/auth/login' signUpUrl='/auth/register' waitlistUrl='/waitlist'>
+    <ClerkProvider signInUrl='/auth/login' signUpUrl='/auth/register' waitlistUrl='/waitlist' localization={{
+      ...ptBR,
+      signUp: {
+        start: {
+          ...ptBR.signUp?.start,
+          subtitle: 'to start using {{applicationName}}',
+        },
+        emailCode: {
+          ...ptBR.signUp?.emailCode,
+          subtitle: 'to start using {{applicationName}}',
+        },
+      },
+    }}
+      appearance={{
+        baseTheme: neobrutalism,
+        elements: {
+          socialButtonsIconButton: {
+            backgroundColor: '#6b0a53',
+            color: '#fff',
+          },
+          socialButtonsIconButton__google: {
+            backgroundColor: '#f25022',
+            color: '#fff',
+          }
+        },
+        variables: {
+          colorBackground: '#1573db',
+          borderRadius: '2px',
+          colorPrimary: '#2352c2',
+          colorText: '#fff',
+          colorTextSecondary: '#edeaea',
+          colorTextOnPrimaryBackground: '#000',
+          colorInputText: '#000000',
+        },
+        layout: {
+          animations: true,
+          termsPageUrl: '/terms',
+          privacyPageUrl: '/privacy',
+          socialButtonsVariant: 'blockButton',
+          showOptionalFields: false,
+          logoPlacement: 'inside',
+          socialButtonsPlacement: 'bottom',
+          shimmer: true,
+        }
+      }}>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
