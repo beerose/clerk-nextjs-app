@@ -17,3 +17,7 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body {
+  @apply bg-gray-50;
+}
