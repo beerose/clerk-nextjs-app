@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { SignOutButton } from '@/src/components/SignOutButton'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -51,7 +52,7 @@ export default function RootLayout({
               <SignUpButton />
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <SignOutButton />
             </SignedIn>
           </header>
           {children}

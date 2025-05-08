@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ClerkAPIError } from '@clerk/types'
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors'
 import { CodeVerificationForm } from '@/src/components/CodeVerificationForm'
-import { EmailForm } from '@/src/components/EmailForm'
+import { EmailPasswordForm } from '@/src/components/EmailPasswordForm'
 
 const Errors = ({ errors }: { errors: ClerkAPIError[] }) => {
   if (!errors) return null
@@ -28,7 +28,7 @@ export default function Page() {
   const [errors, setErrors] = React.useState<ClerkAPIError[]>()
   const router = useRouter()
 
-  async function handleSubmit(email: string) {
+  async function handleSubmit(email: string, password: string) {
     setErrors(undefined)
 
     if (!isLoaded && !signUp) return null
@@ -36,6 +36,7 @@ export default function Page() {
     try {
       await signUp.create({
         emailAddress: email,
+        password
       })
 
       await signUp.prepareEmailAddressVerification()
@@ -84,7 +85,7 @@ export default function Page() {
   return (
     <>
       <h1 className="text-2xl font-bold text-center sm:text-left">Sign up</h1>
-      <EmailForm onSubmit={handleSubmit} />
+      <EmailPasswordForm onSubmit={handleSubmit} />
       {errors && <Errors errors={errors} />}
     </>
   )
