@@ -43,8 +43,11 @@ export default function Page() {
         setVerifying(true)
       }
     } catch (err) {
-      if (isClerkAPIResponseError(err)) setErrors(err.errors)
-      console.error(JSON.stringify(err, null, 2))
+      if (isClerkAPIResponseError(err)) {
+        setErrors(err.errors)
+      } else {
+        console.error(JSON.stringify(err, null, 2))
+      }
     }
   }
 
@@ -65,8 +68,11 @@ export default function Page() {
         console.error(signInAttempt)
       }
     } catch (err) {
-      if (isClerkAPIResponseError(err)) setErrors(err.errors)
-      console.error(JSON.stringify(err, null, 2))
+      if (isClerkAPIResponseError(err)) {
+        setErrors(err.errors)
+      } else {
+        console.error(JSON.stringify(err, null, 2))
+      }
     }
   }
 
@@ -104,7 +110,7 @@ export default function Page() {
         <span className="px-2 text-gray-500">or</span>
         <hr className="w-full border-gray-300" />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 items-center justify-center w-full">
         <button
           type="button"
           onClick={() => signInWith('oauth_google')}
