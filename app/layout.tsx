@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, GoogleOneTap, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, OrganizationSwitcher } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider >
+    <ClerkProvider signInUrl='/auth/login' signUpUrl='/auth/register' waitlistUrl='/waitlist'>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
@@ -55,6 +55,8 @@ export default function RootLayout({
             </SignedIn>
           </header>
           {children}
+          <GoogleOneTap />
+
         </body>
       </html>
     </ClerkProvider>
