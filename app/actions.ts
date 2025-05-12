@@ -2,7 +2,7 @@
 
 import { clerkClient } from '@clerk/nextjs/server';
 
-export default async function updateUserMetadata(userId: string, birthdate: string) {
+export async function updateUserMetadata(userId: string, birthdate: string) {
   const client = await clerkClient();
 
   try {

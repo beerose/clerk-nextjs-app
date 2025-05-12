@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import updateUserMetadata from '@/app/actions';
+import { updateUserMetadata } from '@/app/actions';
 
 export default function PublicMetadataBirthdateForm() {
   const { user } = useUser();
