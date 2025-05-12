@@ -2,12 +2,16 @@
 
 import PublicMetadataBirthdateForm from '@/src/components/PublicMetadataBirthdateForm';
 import SupabaseIntegrationTasks from '@/src/components/SupabaseIntegrationTasks';
+import { useSetActiveOrg } from '@/src/useSetActiveOrg';
 import { useAuth, useSession, useUser } from '@clerk/nextjs';
 
 export default function Home() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, orgId } = useAuth();
   const { user } = useUser();
   const { session } = useSession();
+
+  const activeOrg = useSetActiveOrg();
+  console.log('activeOrg', activeOrg);
 
   if (!isSignedIn) {
     return (
