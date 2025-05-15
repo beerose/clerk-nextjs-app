@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, OrganizationSwitcher, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
@@ -46,6 +46,7 @@ export default function RootLayout({
                 />
               </svg>
             </a>
+            <OrganizationSwitcher />
             <SignedOut>
               <SignInButton />
               <SignUpButton />
