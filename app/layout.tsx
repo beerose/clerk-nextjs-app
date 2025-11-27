@@ -46,6 +46,7 @@ export default function RootLayout({
                 />
               </svg>
             </a>
+            <OrganizationSwitcher />
             <SignedOut>
               <SignInButton />
               <SignUpButton />
